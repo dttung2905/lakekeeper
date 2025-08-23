@@ -16,7 +16,7 @@ use iceberg_ext::{
     },
     configs::Location,
 };
-
+use iceberg_ext::catalog::rest::ListTablesResponse;
 use crate::{
     api::{
         iceberg::{
@@ -30,6 +30,7 @@ use crate::{
     service::{TableId, UndropTabularResponse, ViewId},
     WarehouseId,
 };
+use crate::api::iceberg::v1::ListTablesQuery;
 
 #[derive(Clone)]
 pub struct EndpointHookCollection(pub(crate) Vec<Arc<dyn EndpointHook>>);
@@ -471,6 +472,17 @@ pub trait EndpointHook: Send + Sync + Debug + Display {
         _warehouse_id: WarehouseId,
         _request: Arc<UndropTabularsRequest>,
         _responses: Arc<Vec<UndropTabularResponse>>,
+        _request_metadata: Arc<RequestMetadata>,
+    ) -> anyhow::Result<()> {
+        Ok(())
+    }
+
+    async fn list_tables(
+        &self,
+        _warehouse_id: WarehouseId,
+        _parameters: NamespaceParameters,
+        _query: ListTablesQuery,
+        _response: Arc<ListTablesResponse>,
         _request_metadata: Arc<RequestMetadata>,
     ) -> anyhow::Result<()> {
         Ok(())
